@@ -65,6 +65,7 @@
         <Button
             android:id="@+id/roll_button"
             style="@style/button_style"
+            android:onClick="rollDice"
             android:text="@string/roll" />
 
         <Button
@@ -75,6 +76,7 @@
         <Button
             android:id="@+id/reset_button"
             style="@style/button_style"
+            android:onClick="resetGame"
             android:text="@string/reset" />
 
     </LinearLayout>
@@ -97,7 +99,7 @@
         android:text="@string/initial_score" />
 
     <TextView
-        android:id="@+id/com_turn_score_label"
+        android:id="@+id/com_turn_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -106,7 +108,7 @@
         android:text="@string/initial_score" />
 
     <TextView
-        android:id="@+id/com_turn_score"
+        android:id="@+id/com_turn_score_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_layout"
