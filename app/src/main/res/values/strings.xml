@@ -2,7 +2,7 @@
     <string name="app_name">Scarne\'s Dice</string>
     <string name="your_score">Your score : </string>
     <string name="initial_score">0</string>
-    <string name="computer_score">Computer score</string>
+    <string name="computer_score">Computer score : </string>
     <string name="image_of_dice">Image of dice</string>
     <string name="reset">Reset</string>
     <string name="hold">Hold</string>

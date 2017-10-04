@@ -1,120 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
+    android:orientation="vertical"
+    android:weightSum="1"
     tools:context="com.umang.developer.scarnesdice.MainActivity">
 
 
     <TextView
-        android:id="@+id/your_score_label_text_view"
+        android:id="@+id/uscore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/your_score" />
-
+        android:layout_gravity="center"
+        android:text="@string/your_score"
+        android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/your_score_text_view"
+        android:id="@+id/cscore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/your_score_label_text_view"
-        android:text="@string/initial_score" />
-
-    <TextView
-        android:id="@+id/com_score_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="8dp"
-        android:text="@string/initial_score" />
-
-    <TextView
-        android:id="@+id/com_score_label_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/com_score_text_view"
-        android:text="@string/computer_score" />
-
+        android:layout_gravity="center"
+        android:text="@string/computer_score"
+        android:textSize="20sp" />
 
     <ImageView
-        android:id="@+id/dice_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/com_score_label_text_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:contentDescription="@string/image_of_dice"
+        android:id="@+id/imgdice"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:src="@drawable/dice1" />
 
-    <LinearLayout
-        android:id="@+id/button_layout"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/current"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/dice_image_view"
-        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/roll_button"
-            style="@style/button_style"
-            android:onClick="rollDice"
+            android:id="@+id/btnroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:clickable="true"
+            android:onClick="onclick"
             android:text="@string/roll" />
 
         <Button
-            android:id="@+id/hold_button"
-            style="@style/button_style"
+            android:id="@+id/btnhold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:clickable="true"
+            android:onClick="onclick"
             android:text="@string/hold" />
 
         <Button
-            android:id="@+id/reset_button"
-            style="@style/button_style"
-            android:onClick="resetGame"
+            android:id="@+id/btnreset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="onclick"
             android:text="@string/reset" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/turn_score_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/button_layout"
-        android:text="@string/your_turn_score" />
-
-    <TextView
-        android:id="@+id/user_turn_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_layout"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/turn_score_label"
-        android:text="@string/initial_score" />
-
-    <TextView
-        android:id="@+id/com_turn_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/button_layout"
-        android:layout_marginStart="8dp"
-        android:text="@string/initial_score" />
-
-    <TextView
-        android:id="@+id/com_turn_score_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_layout"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/com_score_text_view"
-        android:text="@string/com_turn_score" />
-
-
-</RelativeLayout>
+</LinearLayout>

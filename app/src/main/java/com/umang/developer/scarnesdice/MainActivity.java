@@ -1,174 +1,204 @@
 package com.umang.developer.scarnesdice;
 
-import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Instance variables to store scores of user and computer
-    private int userOverallScore;
-    private int userTurnScore;
-    private int computerOverallScore;
-    private int computerTurnScore;
+    //4 global variables to store value of user and computer scores
+    int uoverall, ucurrent, coverall, ccurrent;
 
-    //Instance variables for score textview elements
-    private TextView userOverallScoreTextView;
-    private TextView computerOverallScoreTextView;
-    private TextView userTurnScoreTextView;
-    private TextView computerTurnScoreTextView;
+    //Random is used to generate a random number
+    Random rand = new Random();
 
-    //Instance variable for the dice imageview element
-    private ImageView diceImageView;
+    //TextViews and ImageView to implement our logic on the components in UI
+    TextView uscorer, cscorer, current;
+    ImageView cov;
 
-    //Instance variables for button elements
-    private Button rollButton;
-    private Button holdButton;
-    private Button resetButton;
+    //To store strings of scorecard of user and computer
+    String udefault, cdefault;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        uscorer = (TextView) findViewById(R.id.uscore);
+        cscorer = (TextView) findViewById(R.id.cscore);
+        current = (TextView) findViewById(R.id.current);
+        cov = (ImageView) findViewById(R.id.imgdice);
+        udefault = (String) uscorer.getText();
+        cdefault = (String) cscorer.getText();
+    }
 
-        //Hooking the XML code with the Java objects
-        userOverallScoreTextView = (TextView) findViewById(R.id.your_score_text_view);
-        computerOverallScoreTextView = (TextView) findViewById(R.id.com_score_text_view);
-        userTurnScoreTextView = (TextView) findViewById(R.id.user_turn_score);
-        computerTurnScoreTextView = (TextView) findViewById(R.id.com_turn_score);
-        diceImageView = (ImageView) findViewById(R.id.dice_image_view);
-        rollButton = (Button) findViewById(R.id.roll_button);
-        holdButton = (Button) findViewById(R.id.hold_button);
-        resetButton = (Button) findViewById(R.id.reset_button);
+    //Handler for onclick events
+    public void onclick(View v) {
 
+        //if ROLL button clicked
+        if (v.getId() == R.id.btnroll) {
+
+            //user current score stored after dice roll
+            ucurrent = diceRoll(ucurrent, 6, 1);
+
+            //if user rolls 0, no updation and turn switches to computer
+            if (ucurrent == 0) {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        computerTurn();
+                    }
+                }, 1000);
+            }
+            //Update value of current score
+            String update = "Current Score is : " + ucurrent;
+            current.setText(update);
+        }
+
+        //if HOLD button clicked
+        if (v.getId() == R.id.btnhold) {
+            //update user overall value, change current to 0 and update scorecard
+            uoverall = uoverall + ucurrent;
+            ucurrent = 0;
+            String update = udefault + uoverall;
+            uscorer.setText(update);
+
+            //check after updating overall score if condition of winning is satisfied for user
+            if (uoverall > coverall && uoverall >= 100) {
+                Toast toast = Toast.makeText(getApplicationContext(), "You Win Congratulations! Keep Beating.", Toast.LENGTH_SHORT);
+                toast.show();
+                reset();
+            }
+
+            //switch control to computer
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    computerTurn();
+                }
+            }, 1000);
+        }
+
+        //if RESET button clicked
+        if (v.getId() == R.id.btnreset) {
+            reset();
+        }
 
     }
 
-    /**
-     * This method is called when the ROLL button is clicked
-     *
-     * @param view is the ROLL button
-     */
-    public void rollDice(View view) {
-        //Get random dice number from the getDiceNumber() method
-        int diceNumber = getDiceNumber();
+    //the reset helper logic
+    public void reset() {
+        //making all global variables 0
+        uoverall = 0;
+        ucurrent = 0;
+        ccurrent = 0;
+        coverall = 0;
 
-        //Displaying correct dice face according to the dice number
-        displayDiceFace(diceNumber);
+        //updating scorecard to default
+        uscorer.setText(udefault);
+        cscorer.setText(cdefault);
+        current.setText("");
 
-        //User playing method
-        playUserTurn(diceNumber);
+        //Toast so user knows about new game (optional)
+        Toast toast = Toast.makeText(getApplicationContext(), "New Game! Good Luck!", Toast.LENGTH_SHORT);
+        toast.show();
+        cov.setImageResource(R.drawable.dice1);
 
     }
 
 
-    /**
-     * This method is used to play by the user
-     *
-     * @param diceNumber is the number on the die face
-     */
-    private void playUserTurn(int diceNumber) {
+    public int diceRoll(int value, int max, int min) {
 
-        //Logic if the diceNumber is not 1
-        if (diceNumber != 1) {
+        //Logic so that integer is between 1 and 6
+        int randomNum = rand.nextInt(max - min) + min;
+        value = value + randomNum;
 
-            //Updating the userTurnScore with incrementing it with the diceNumber
-            userTurnScore += diceNumber;
+        //if number rolled is 1 set user current score to 0
+        if (randomNum == 1) {
+            value = 0;
+            current.setText("");
+            cov.setImageResource(R.drawable.dice1);
+        }
 
-            //Updating the userTurnScoreTextView with the current userTurnScore value
-            updateUserTurnScoreTextView();
+        //if number other than 1, just update photo to corresponding dice
+        else if (randomNum == 2)
+            cov.setImageResource(R.drawable.dice2);
+
+        else if (randomNum == 3)
+            cov.setImageResource(R.drawable.dice3);
+
+        else if (randomNum == 4)
+            cov.setImageResource(R.drawable.dice4);
+
+        else if (randomNum == 5)
+            cov.setImageResource(R.drawable.dice5);
+
+        else if (randomNum == 6)
+            cov.setImageResource(R.drawable.dice6);
+
+        return value;
+    }
+
+    public void computerTurn() {
+
+        //disabling ROLL, HOLD and RESET buttons
+        Button btn = (Button) findViewById(R.id.btnhold);
+        btn.setEnabled(false);
+        Button btn1 = (Button) findViewById(R.id.btnroll);
+        btn1.setEnabled(false);
+        Button btn2 = (Button) findViewById(R.id.btnreset);
+        btn2.setEnabled(false);
+
+
+        //computer rolls dice
+        ccurrent = diceRoll(ccurrent, 6, 2);
+
+        //Update value of current score
+        String update = "Current Score is : " + String.valueOf(ccurrent);
+        current.setText(update);
+
+
+        if (ccurrent >= 13) {
+
+            //update overall value, change current to 0 and update scorecard
+            current.setText("");
+            coverall = coverall + ccurrent;
+            ccurrent = 0;
+            update = cdefault + String.valueOf(coverall);
+            cscorer.setText(update);
+
+            //check after updating overall score if condition of winning is satisfied for computer
+            if (coverall > uoverall && coverall >= 100) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Computer Wins! Try Again Loser!", Toast.LENGTH_SHORT);
+                toast.show();
+                reset();
+            }
+
+            //switch ROLL, HOLD and RESET buttons back ON
+            btn2.setEnabled(true);
+            btn1.setEnabled(true);
+            btn.setEnabled(true);
+
+            //Toast to let user know its his turn now
+            Toast toast = Toast.makeText(getApplicationContext(), "Your Turn!", Toast.LENGTH_SHORT);
+            toast.show();
         } else {
-
-            //If the diceNumber becomes one, then update the userOverallScore
-            userOverallScore = userTurnScore;
-
-            //Resets the userTurnScore to zero
-            userTurnScore = 0;
-
-            //Updating the userTurnScoreTextView with the current userTurnScore value
-            updateUserTurnScoreTextView();
-
-            //Updating the userOverallScoreTextView wit the current userOverallScore value
-            updateUserOverallScoreTextView();
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    computerTurn();
+                }
+            }, 1000);
         }
+
     }
-
-    /**
-     * This method updates the userOverallScoreTextView with the current userOverallScore value
-     */
-    private void updateUserOverallScoreTextView() {
-        userOverallScoreTextView.setText("" + userOverallScore);
-    }
-
-
-    /**
-     * This method resets the scores when the user clicks the RESET button.
-     *
-     * @param view is the Reset Button
-     */
-    public void resetGame(View view) {
-        //Assigning zero to all the score counter variables
-        userOverallScore = 0;
-        userTurnScore = 0;
-        computerOverallScore = 0;
-        computerTurnScore = 0;
-
-        //Displaying all reset scores to all the score textviews
-        userOverallScoreTextView.setText("" + userOverallScore);
-        userTurnScoreTextView.setText("" + userTurnScore);
-        computerOverallScoreTextView.setText("" + computerOverallScore);
-        computerTurnScoreTextView.setText("" + computerTurnScore);
-    }
-
-
-    /**
-     * This method randomly chooses a  number between 1 to 6 and returns it.
-     *
-     * @return Dice number in the range of 1 to 6
-     */
-    private int getDiceNumber() {
-        //Using Math.random() for generating the random number from 1 to 6
-        return (1 + (int) (Math.random() * ((6 - 1) + 1)));
-    }
-
-    /**
-     * This method updates the userTurnScoreTextView with the userTurnScore value
-     */
-    private void updateUserTurnScoreTextView() {
-        userTurnScoreTextView.setText("" + userTurnScore);
-    }
-
-    /**
-     * This method displaying the dice face according to the dice number in parameter
-     *
-     * @param diceNumber is the dice number on the dice to be displayed
-     */
-    private void displayDiceFace(int diceNumber) {
-        switch (diceNumber) {
-            case 1:
-                diceImageView.setImageResource(R.drawable.dice1);
-                break;
-            case 2:
-                diceImageView.setImageResource(R.drawable.dice2);
-                break;
-            case 3:
-                diceImageView.setImageResource(R.drawable.dice3);
-                break;
-            case 4:
-                diceImageView.setImageResource(R.drawable.dice4);
-                break;
-            case 5:
-                diceImageView.setImageResource(R.drawable.dice5);
-                break;
-            case 6:
-                diceImageView.setImageResource(R.drawable.dice6);
-                break;
-            default:
-                diceImageView.destroyDrawingCache();
-        }
-    }
-
 }
